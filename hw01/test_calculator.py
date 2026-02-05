@@ -1,3 +1,5 @@
+"""Unit Tests for simple calculator function"""
+
 import builtins
 
 from hw01.calculator import main
@@ -10,6 +12,7 @@ def run_main_with_inputs(monkeypatch, inputs):
 
 
 def test_addition(monkeypatch, capsys):
+    """Test Addition operator"""
     run_main_with_inputs(monkeypatch, ["2", "+", "3"])
     main()
     out = capsys.readouterr().out
@@ -18,6 +21,7 @@ def test_addition(monkeypatch, capsys):
 
 
 def test_subtraction(monkeypatch, capsys):
+    """Test Subtraction operator"""
     run_main_with_inputs(monkeypatch, ["10", "-", "4"])
     main()
     out = capsys.readouterr().out
@@ -25,6 +29,7 @@ def test_subtraction(monkeypatch, capsys):
 
 
 def test_multiplication(monkeypatch, capsys):
+    """Test Multiplication operator"""
     run_main_with_inputs(monkeypatch, ["3", "*", "4"])
     main()
     out = capsys.readouterr().out
@@ -32,6 +37,7 @@ def test_multiplication(monkeypatch, capsys):
 
 
 def test_division(monkeypatch, capsys):
+    """Test Division operator"""
     run_main_with_inputs(monkeypatch, ["8", "/", "2"])
     main()
     out = capsys.readouterr().out
@@ -39,6 +45,7 @@ def test_division(monkeypatch, capsys):
 
 
 def test_division_by_zero(monkeypatch, capsys):
+    """Test if dividing by zero"""
     run_main_with_inputs(monkeypatch, ["8", "/", "0"])
     main()
     out = capsys.readouterr().out
@@ -47,6 +54,7 @@ def test_division_by_zero(monkeypatch, capsys):
 
 
 def test_invalid_operator(monkeypatch, capsys):
+    """Test to ensure simple operators used"""
     run_main_with_inputs(monkeypatch, ["1", "%", "2"])
     main()
     out = capsys.readouterr().out
