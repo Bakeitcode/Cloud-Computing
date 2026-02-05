@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - frontend/**
+      - hw01/**
+      - .github/workflows/hw01-workflow.yml
 
 jobs:
   build:
@@ -30,8 +31,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files 'hw01/*.py')
+          python -m pylint $(git ls-files 'hw01/*.py')
       - name: Run all your pytest tests in your code
         run: |
-          export PATH="$(python -m site --user-base)/bin:$PATH"
-          pytest
+          python -m pytest
