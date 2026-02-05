@@ -1,4 +1,9 @@
+"""A simple calculator application"""
+
 def main():
+    """
+    All arithmetic handled in main
+    """
     print("Simple Calculator")
 
     a = float(input("Enter first number: "))
