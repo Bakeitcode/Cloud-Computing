@@ -1,0 +1,2 @@
+"""Random python file to push to EC2 for GHA tutorial"""
+print("Hello, World!")
