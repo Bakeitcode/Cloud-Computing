@@ -5,8 +5,14 @@ on:
     branches:
       - main
     paths:
-      - hw01/**
-      - .github/workflows/hw01-workflow.yml
+      - 'hw01/**'
+      - '.github/workflows/hw01-workflow.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'hw01/**'
+      - '.github/workflows/hw01-workflow.yml'
 
 jobs:
   build:

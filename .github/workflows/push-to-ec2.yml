@@ -31,8 +31,8 @@ jobs:
           # The public dns of your EC2 instance. You must update this value every LL session! (Yes, this is annoying.)
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           # Usually set to "ec2-user"
-          REMOTE_USER: "ec2-user"
+          REMOTE_USER: ${{ secrets.USERNAME }}
           # Limit the deploy to ONLY these files. Make sure it matches the folder structure in your repo.
-          SOURCE: "hw02/*.html" 
+          SOURCE: "hw02/" 
           # Local EC2 path to deploy the code. e.g. "~/server". Make sure it matches where you want to put the code on the EC2 instance.
-          TARGET: "~/server"
+          TARGET: ${{ secrets.TARGET_DIR }}
