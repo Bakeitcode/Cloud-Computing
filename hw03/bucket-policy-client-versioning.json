@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowLabRoleListBucket",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::338893091918:role/LabRole"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::hw03-acr22003-client-versioning"
+        },
+        {
+            "Sid": "AllowLabRoleGetPutObjects",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::338893091918:role/LabRole"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::hw03-acr22003-client-versioning/*"
+        }
+    ]
+}
