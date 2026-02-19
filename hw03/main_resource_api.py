@@ -5,7 +5,7 @@ from botocore.exceptions import NoCredentialsError
 
 # Initialize global variables
 s3_resource = boto3.resource('s3')
-SELECTED_BUCKET = None
+SELECTED_BUCKET = "hw03-acr22003-resource-versioning"
 
 def upload(local_folder_name, bucket_name):
     """Upload files from a local folder to S3, preserving folder structure."""
@@ -21,6 +21,7 @@ def upload(local_folder_name, bucket_name):
             s3_key = os.path.relpath(file_path, local_folder_name)
             try:
                 # TODO: 1 - Use the upload file resouce API call
+                bucket.upload_file(file_path, s3_key)
 
                 print(f"Uploaded {file_path} to {bucket_name}/{s3_key}")
             except Exception as e:
@@ -31,7 +32,7 @@ def list_contents(bucket_name, server_folder_name):
     try:
         bucket = s3_resource.Bucket(bucket_name)
         file_list = []
-        for obj in # TODO: 2 - Complete this line using the Resource API
+        for obj in bucket.objects.filter(Prefix=server_folder_name):    # TODO: 2 - Complete this line using the Resource API
             file_list.append(obj.key)
         if not file_list:
             print("No files found in the specified folder.")
@@ -45,7 +46,7 @@ def get_file(bucket_name, server_folder_name, file_name):
     key = f"{server_folder_name}/{file_name}".strip('/')
     try:
         # TODO: 3 - Use the file resouce API call
-        obj = 
+        obj = s3_resource.Object(bucket_name, key)
         print(f"Retrieved file: {file_name}")
         return obj.get()['Body'].read()
     except Exception as e:
@@ -56,7 +57,7 @@ def list_buckets():
     """List all buckets in the AWS account."""
     try:
         # TODO: 4 - Use the file resouce API call
-        buckets = 
+        buckets = [b.name for b in s3_resource.buckets.all()]
         if buckets:
             print("\nBuckets available:")
             for idx, bucket in enumerate(buckets, 1):
@@ -105,7 +106,7 @@ def download_object():
     local_path = input("Enter the local file path to save the object: ")
     try:
         # TODO: 5 - Use the file resouce API call
-        file_data = 
+        file_data = get_file(SELECTED_BUCKET, server_folder_name, file_name)
         if file_data:
             with open(local_path, 'wb') as file:
                 file.write(file_data)
@@ -123,7 +124,7 @@ def generate_presigned_url():
     try:
         obj = s3_resource.Object(SELECTED_BUCKET, object_key)
         # TODO: 6 - Use the file resouce API call
-        url = 
+        url = obj.meta.client.generate_presigned_url('get_object', Params={'Bucket': SELECTED_BUCKET, 'Key': object_key})
         print(f"Pre-signed URL: {url}")
     except Exception as e:
         print(f"Error generating pre-signed URL: {e}")
@@ -138,7 +139,7 @@ def list_object_versions():
     try:
         bucket = s3_resource.Bucket(SELECTED_BUCKET)
         # TODO: 7 - Use the file resouce API call
-        versions = 
+        versions = bucket.object_versions.filter(Prefix=object_key)
         print(f"\nVersions for {object_key}:")
         for version in versions:
             print(f"VersionId: {version.id}, LastModified: {version.last_modified},"
@@ -156,6 +157,7 @@ def delete_object():
     try:
         obj = s3_resource.Object(SELECTED_BUCKET, object_key)
         # TODO: 8 - Use the file resouce API call
+        obj.delete()
 
         print(f"Deleted {object_key} from {SELECTED_BUCKET}")
     except Exception as e:
@@ -172,6 +174,7 @@ def upload_single_file():
     try:
         bucket = s3_resource.Bucket(SELECTED_BUCKET)
         # TODO: 9 - Use the file resouce API call
+        bucket.upload_file(local_file_path, s3_key)
 
         print(f"Uploaded {local_file_path} to {SELECTED_BUCKET}/{s3_key}")
     except Exception as e:

@@ -5,7 +5,7 @@ from botocore.exceptions import NoCredentialsError
 
 # Initialize global variables
 s3_client = boto3.client('s3')
-SELECTED_BUCKET = None
+SELECTED_BUCKET = "hw03-acr22003-client-versioning"
 
 def upload(local_folder_name, bucket_name):
     """Upload files from a local folder to S3, preserving folder structure."""
@@ -19,6 +19,7 @@ def upload(local_folder_name, bucket_name):
             s3_key = os.path.relpath(file_path, local_folder_name)
             try:
                 # TODO: 1 - Use the upload file client API call
+                s3_client.upload_file(file_path, bucket_name, s3_key)
 
                 print(f"Uploaded {file_path} to {bucket_name}/{s3_key}")
             except Exception as e:
@@ -28,7 +29,7 @@ def list_contents(bucket_name, server_folder_name):
     """List all files in the given bucket and folder."""
     try:
         # TODO: 2 - Use the list objects client API call
-        response = 
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=server_folder_name)
         file_list = []
         if 'Contents' in response:
             for obj in response['Contents']:
@@ -45,7 +46,7 @@ def get_file(bucket_name, server_folder_name, file_name):
     key = f"{server_folder_name}/{file_name}".strip('/')
     try:
         # TODO: 3 - Use the get object client API call
-        response = 
+        response = s3_client.get_object(Bucket=bucket_name, Key=key)
         print(f"Retrieved file: {file_name}")
         return response['Body'].read()
     except Exception as e:
@@ -56,7 +57,7 @@ def list_buckets():
     """List all buckets in the AWS account."""
     try:
         # TODO: 4 -  Use the list buckets client API call
-        response = 
+        response = s3_client.list_buckets()
         buckets = [bucket['Name'] for bucket in response['Buckets']]
         if buckets:
             print("\nBuckets available:")
@@ -92,7 +93,7 @@ def list_objects_in_bucket():
     server_folder_name = input("Enter the folder name in the bucket (or leave empty for root): ")
 
     # TODO: 5 - Use the list objects client API call
-    objects = 
+    objects = list_contents(SELECTED_BUCKET, server_folder_name)
     if objects:
         print("\nObjects in bucket:")
         for obj in objects:
@@ -125,7 +126,7 @@ def generate_presigned_url():
     object_key = input("Enter the object key for the pre-signed URL: ")
     try:
         # TODO: 6 - Use the generate presigned url client API call
-        url = 
+        url = s3_client.generate_presigned_url('get_object', Params={'Bucket': SELECTED_BUCKET, 'Key': object_key})
         print(f"Pre-signed URL: {url}")
     except Exception as e:
         print(f"Error generating pre-signed URL: {e}")
@@ -139,7 +140,7 @@ def list_object_versions():
     object_key = input("Enter the object key to list versions: ")
     try:
         # TODO: 7 - Use the list object versions client API call
-        response = 
+        response = s3_client.list_object_versions(Bucket=SELECTED_BUCKET, Prefix=object_key)
         if 'Versions' in response:
             print(f"\nVersions for {object_key}:")
             for version in response['Versions']:
@@ -159,6 +160,7 @@ def delete_object():
     object_key = input("Enter the object key to delete: ")
     try:
         # TODO: 8 - Use the delete object client API call
+        s3_client.delete_object(Bucket=SELECTED_BUCKET, Key=object_key)
 
         print(f"Deleted {object_key} from {SELECTED_BUCKET}")
     except Exception as e:
@@ -168,6 +170,7 @@ def upload_file_to_bucket(local_file_path, bucket_name, s3_key):
     """Upload a single file to the specified S3 bucket."""
     try:
         # TODO: 9 - Use the upload file client API call
+        s3_client.upload_file(local_file_path, bucket_name, s3_key)
 
         print(f"Uploaded {local_file_path} to {bucket_name}/{s3_key}")
     except Exception as e:
