@@ -1,0 +1,15 @@
+info:
+  name: proxy - list bucket
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{devUrl}}/proxy/listbuckets"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
