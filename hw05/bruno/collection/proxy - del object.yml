@@ -1,0 +1,15 @@
+info:
+  name: proxy - del object
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{prodUrl}}/proxy/{{bucketName}}/{{objectName}}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

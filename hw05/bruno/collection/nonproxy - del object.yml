@@ -1,0 +1,15 @@
+info:
+  name: nonproxy - del object
+  type: http
+  seq: 8
+
+http:
+  method: DELETE
+  url: "{{prodUrl}}/nonproxy/{{bucketName}}/{{objectName}}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
