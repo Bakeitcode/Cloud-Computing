@@ -19,6 +19,12 @@ def put_object_nonproxy_handler(event, context):
     logger.info("object-name: %s", object_name)
     logger.info("request body: %s", body)
 
+    # FIX: API Gateway non-proxy mapping may pass the request body as a parsed JSON object (dict)
+    # instead of a string. s3.put_object() requires the Body parameter to be a string or bytes,
+    # so convert the body to JSON text if it is not already a string.
+    if not isinstance(body, str):
+        body = json.dumps(body)
+
     try:
         s3.put_object(
             Bucket=bucket_name,
