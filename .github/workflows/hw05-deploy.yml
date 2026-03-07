@@ -11,50 +11,68 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_DEFAULT_REGION: us-east-1
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Check AWS identity
+        shell: bash
+        run: |
+          aws sts get-caller-identity
+
       - name: Package list_buckets_proxy
+        shell: bash
         run: |
           cd hw05
           zip -j list_buckets_proxy.zip list_buckets_proxy.py
 
       - name: Deploy list_buckets_proxy
+        shell: bash
         run: |
           aws lambda update-function-code \
             --function-name hw05_list_buckets_proxy \
             --zip-file fileb://hw05/list_buckets_proxy.zip
 
       - name: Package list_objects_proxy
+        shell: bash
         run: |
           cd hw05
           zip -j list_objects_proxy.zip list_objects_proxy.py
 
       - name: Deploy list_objects_proxy
+        shell: bash
         run: |
           aws lambda update-function-code \
             --function-name hw05_list_objects_proxy \
             --zip-file fileb://hw05/list_objects_proxy.zip
 
       - name: Package put_object_proxy
+        shell: bash
         run: |
           cd hw05
           zip -j put_object_proxy.zip put_object_proxy.py
 
       - name: Deploy put_object_proxy
+        shell: bash
         run: |
           aws lambda update-function-code \
             --function-name hw05_put_object_proxy \
             --zip-file fileb://hw05/put_object_proxy.zip
 
       - name: Package del_object_proxy
+        shell: bash
         run: |
           cd hw05
           zip -j del_object_proxy.zip del_object_proxy.py
 
       - name: Deploy del_object_proxy
+        shell: bash
         run: |
           aws lambda update-function-code \
             --function-name hw05_del_object_proxy \
