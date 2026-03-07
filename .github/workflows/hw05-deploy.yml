@@ -77,3 +77,55 @@ jobs:
           aws lambda update-function-code \
             --function-name hw05_del_object_proxy \
             --zip-file fileb://hw05/del_object_proxy.zip
+
+      - name: Package list_buckets_nonproxy
+        shell: bash
+        run: |
+          cd hw05
+          zip -j list_buckets_nonproxy.zip list_buckets_nonproxy.py
+
+      - name: Deploy list_buckets_nonproxy
+        shell: bash
+        run: |
+          aws lambda update-function-code \
+            --function-name hw05_list_buckets_nonproxy \
+            --zip-file fileb://hw05/list_buckets_nonproxy.zip
+
+      - name: Package list_objects_nonproxy
+        shell: bash
+        run: |
+          cd hw05
+          zip -j list_objects_nonproxy.zip list_objects_nonproxy.py
+
+      - name: Deploy list_objects_nonproxy
+        shell: bash
+        run: |
+          aws lambda update-function-code \
+            --function-name hw05_list_objects_nonproxy \
+            --zip-file fileb://hw05/list_objects_nonproxy.zip
+
+      - name: Package put_object_nonproxy
+        shell: bash
+        run: |
+          cd hw05
+          zip -j put_object_nonproxy.zip put_object_nonproxy.py
+
+      - name: Deploy put_object_nonproxy
+        shell: bash
+        run: |
+          aws lambda update-function-code \
+            --function-name hw05_put_object_nonproxy \
+            --zip-file fileb://hw05/put_object_nonproxy.zip
+
+      - name: Package del_object_nonproxy
+        shell: bash
+        run: |
+          cd hw05
+          zip -j del_object_nonproxy.zip del_object_nonproxy.py
+
+      - name: Deploy del_object_nonproxy
+        shell: bash
+        run: |
+          aws lambda update-function-code \
+            --function-name hw05_del_object_nonproxy \
+            --zip-file fileb://hw05/del_object_nonproxy.zip
