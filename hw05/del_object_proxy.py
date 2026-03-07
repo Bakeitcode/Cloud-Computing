@@ -1,20 +1,28 @@
 import json
 import boto3
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 s3 = boto3.client('s3')
 
 def del_object_handler(event, context):
+    logger.info("Received event: %s", json.dumps(event))
 
-    bucket = event["pathParameters"]["bucket-name"]
-    obj = event["pathParameters"]["object-name"]
+    bucket_name = event["pathParameters"]["bucket-name"]
+    object_name = event["pathParameters"]["object-name"]
+
+    logger.info("bucket-name: %s", bucket_name)
+    logger.info("object-name: %s", object_name)
 
     s3.delete_object(
-        Bucket=bucket,
-        Key=obj
+        Bucket=bucket_name,
+        Key=object_name
     )
 
     data = {
-        "message": f"Deleted object {obj} from bucket {bucket}"
+        "message": f"Deleted object {object_name} from bucket {bucket_name}"
     }
 
     return {
