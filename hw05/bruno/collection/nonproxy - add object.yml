@@ -1,11 +1,11 @@
 info:
-  name: proxy - add object
+  name: nonproxy - add object
   type: http
-  seq: 3
+  seq: 7
 
 http:
   method: PUT
-  url: "{{devUrl}}/proxy/{{bucketName}}/{{objectName}}"
+  url: "{{prodUrl}}/nonproxy/{{bucketName}}/{{objectName}}"
   headers:
     - name: Content-Type
       value: application/json

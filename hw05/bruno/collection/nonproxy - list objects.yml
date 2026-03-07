@@ -1,11 +1,11 @@
 info:
-  name: proxy - del object
+  name: nonproxy - list objects
   type: http
-  seq: 4
+  seq: 6
 
 http:
-  method: DELETE
-  url: "{{devUrl}}/proxy/{{bucketName}}/{{objectName}}"
+  method: GET
+  url: "{{prodUrl}}/nonproxy/{{bucketName}}"
   auth: inherit
 
 settings:
