@@ -10,7 +10,7 @@ env:
   ECR_REPOSITORY: hw06-app-repo
   ECS_SERVICE: hw06-service
   ECS_CLUSTER: hw06-cluster
-  ECS_TASK_DEFINITION: HW06/taskdef-hw06.json
+  ECS_TASK_DEFINITION: hw06/taskdef-hw06.json
   CONTAINER_NAME: hw06-container
 
 jobs:
