@@ -1,101 +1,53 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:338893091918:task-definition/hw06-url-shortener:1",
-    "containerDefinitions": [
+  "family": "hw06-url-shortener",
+  "taskRoleArn": "arn:aws:iam::338893091918:role/LabRole",
+  "executionRoleArn": "arn:aws:iam::338893091918:role/LabRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "hw06-container",
+      "image": "338893091918.dkr.ecr.us-east-1.amazonaws.com/hw06-app-repo:latest",
+      "cpu": 1024,
+      "memory": 3072,
+      "memoryReservation": 1024,
+      "portMappings": [
         {
-            "name": "hw06-container",
-            "image": "338893091918.dkr.ecr.us-east-1.amazonaws.com/hw06-app-repo@sha256:27edc4e61c0a93d31098f7a6ff1656b8ecb7f2f65a7482aed6a1886e5bffea66",
-            "cpu": 1024,
-            "memory": 3072,
-            "memoryReservation": 1024,
-            "portMappings": [
-                {
-                    "name": "url-app",
-                    "containerPort": 8000,
-                    "hostPort": 8000,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                }
-            ],
-            "essential": true,
-            "environment": [],
-            "environmentFiles": [],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/hw06-url-shortener",
-                    "awslogs-create-group": "true",
-                    "awslogs-region": "us-east-1",
-                    "awslogs-stream-prefix": "ecs"
-                },
-                "secretOptions": []
-            },
-            "systemControls": []
+          "name": "url-app",
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp",
+          "appProtocol": "http"
         }
-    ],
-    "family": "hw06-url-shortener",
-    "taskRoleArn": "arn:aws:iam::338893091918:role/LabRole",
-    "executionRoleArn": "arn:aws:iam::338893091918:role/LabRole",
-    "networkMode": "awsvpc",
-    "revision": 1,
-    "volumes": [],
-    "status": "ACTIVE",
-    "requiresAttributes": [
-        {
-            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "name": "ecs.capability.execution-role-awslogs"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.ecr-auth"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.task-iam-role"
-        },
-        {
-            "name": "ecs.capability.execution-role-ecr-pull"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "name": "ecs.capability.task-eni"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/hw06-url-shortener",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
         }
-    ],
-    "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE",
-        "MANAGED_INSTANCES"
-    ],
-    "requiresCompatibilities": [
-        "FARGATE"
-    ],
-    "cpu": "1024",
-    "memory": "3072",
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    },
-    "registeredAt": "2026-03-14T01:36:43.385Z",
-    "registeredBy": "arn:aws:sts::338893091918:assumed-role/voclabs/user4790047=ALEXANDER.RIDGWAY@UCONN.EDU",
-    "enableFaultInjection": false,
-    "tags": [
-        {
-            "key": "hw",
-            "value": "6"
-        }
-    ]
+      }
+    }
+  ],
+  "volumes": [],
+  "placementConstraints": [],
+  "tags": [
+    {
+      "key": "hw",
+      "value": "6"
+    }
+  ]
 }
