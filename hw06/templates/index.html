@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW06 URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: #b00020;
+            margin: 10px 0;
+        }
+        .success {
+            color: #0a7a2f;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f3f3f3;
+        }
+        a {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <h1>HW06 URL Shortener - Version 3(GHA deployed)</h1>
+    <p>Enter a full URL and click Generate.</p>
+
+    <form method="POST" action="/">
+        <input
+            type="text"
+            name="long_url"
+            placeholder="http://www.uconn.edu"
+            required
+        />
+        <button type="submit">Generate</button>
+    </form>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if short_url %}
+        <div class="success">
+            Short URL:
+            <a href="{{ short_url }}" target="_blank">{{ short_url }}</a>
+        </div>
+    {% endif %}
+
+    <h2>Stored URLs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Long URL</th>
+                <th>Short URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.key }}</td>
+                <td>
+                    <a href="{{ item.long_url }}" target="_blank">{{ item.long_url }}</a>
+                </td>
+                <td>
+                    <a href="/{{ item.key }}" target="_blank">{{ request.url_root }}{{ item.key }}</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No URLs stored yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

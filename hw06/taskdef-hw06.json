@@ -1,0 +1,62 @@
+{
+  "family": "hw06-url-shortener",
+  "taskRoleArn": "arn:aws:iam::338893091918:role/LabRole",
+  "executionRoleArn": "arn:aws:iam::338893091918:role/LabRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "hw06-container",
+      "image": "338893091918.dkr.ecr.us-east-1.amazonaws.com/hw06-app-repo:latest",
+      "cpu": 1024,
+      "memory": 3072,
+      "memoryReservation": 1024,
+      "portMappings": [
+        {
+          "name": "url-app",
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+            "name": "TABLE_NAME",
+            "value": "hw06-urls"
+        },
+        {
+            "name": "AWS_REGION",
+            "value": "us-east-1"
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/hw06-url-shortener",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "volumes": [],
+  "placementConstraints": [],
+  "tags": [
+    {
+      "key": "hw",
+      "value": "6"
+    }
+  ]
+}
