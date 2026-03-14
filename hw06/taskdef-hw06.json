@@ -27,7 +27,16 @@
         }
       ],
       "essential": true,
-      "environment": [],
+      "environment": [
+        {
+            "name": "TABLE_NAME",
+            "value": "hw06-urls"
+        },
+        {
+            "name": "AWS_REGION",
+            "value": "us-east-1"
+        }
+      ],
       "mountPoints": [],
       "volumesFrom": [],
       "ulimits": [],
