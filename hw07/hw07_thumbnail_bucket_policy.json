@@ -1,0 +1,14 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowThumbnailLambdaToPutObjects",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::338893091918:role/LabRole"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::hw07-thumbnail-acr22003/*"
+        }
+    ]
+}
