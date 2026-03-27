@@ -1,0 +1,28 @@
+{
+  "Records": {
+    "s3": {
+      "object": {
+        "key": [
+          {
+            "suffix": ".png"
+          },
+          {
+            "suffix": ".jpg"
+          },
+          {
+            "suffix": ".jpeg"
+          },
+          {
+            "suffix": ".PNG"
+          },
+          {
+            "suffix": ".JPG"
+          },
+          {
+            "suffix": ".JPEG"
+          }
+        ]
+      }
+    }
+  }
+}
