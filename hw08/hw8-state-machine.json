@@ -1,0 +1,181 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Pass",
+  "States": {
+    "Pass": {
+      "Type": "Pass",
+      "Assign": {
+        "account": "{% $states.input.account %}",
+        "amount": "{% $states.input.amount %}",
+        "type": "{% $states.input.type %}",
+        "desc": "{% $states.input.desc %}"
+      },
+      "Next": "Transaction Type"
+    },
+    "Transaction Type": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Condition": "{% $type = \"dep\" %}",
+          "Next": "Get Account"
+        },
+        {
+          "Condition": "{% $type = \"wtd\" %}",
+          "Next": "Get Account"
+        }
+      ],
+      "Default": "Invalid Type Response"
+    },
+    "Get Account": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:getItem",
+      "Arguments": {
+        "TableName": "hw8-account-list",
+        "Key": {
+          "account": {
+            "S": "{% $account %}"
+          }
+        }
+      },
+      "Next": "Check Account Exists"
+    },
+    "Check Account Exists": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Condition": "{% $exists($states.input.Item) %}",
+          "Next": "Deposit or Withdrawal"
+        }
+      ],
+      "Default": "Invalid Account Response"
+    },
+    "Deposit or Withdrawal": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "Calculate Deposit",
+          "Condition": "{% $type = \"dep\" %}"
+        },
+        {
+          "Next": "Calculate Withdrawal",
+          "Condition": "{% $type = \"wtd\" %}"
+        }
+      ]
+    },
+    "Calculate Deposit": {
+      "Type": "Pass",
+      "Assign": {
+        "currentBalance": "{% $number($states.input.Item.balance.N) %}",
+        "newBalance": "{% $number($states.input.Item.balance.N) + $amount %}"
+      },
+      "Next": "Write Deposit"
+    },
+    "Write Deposit": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:updateItem",
+      "Arguments": {
+        "TableName": "hw8-account-list",
+        "Key": {
+          "account": {
+            "S": "{% $account %}"
+          }
+        },
+        "UpdateExpression": "SET balance = :b, #d = :desc",
+        "ExpressionAttributeNames": {
+          "#d": "desc"
+        },
+        "ExpressionAttributeValues": {
+          ":b": {
+            "N": "{% $string($newBalance) %}"
+          },
+          ":desc": {
+            "S": "{% $desc %}"
+          }
+        }
+      },
+      "Next": "Deposit Success Response"
+    },
+    "Deposit Success Response": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "message": "{% $string($amount) & ' deposited into account ' & $account %}"
+      }
+    },
+    "Invalid Account Response": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "message": "{% 'Invalid Account Number ' & $account %}",
+        "errorType": "BankingError"
+      }
+    },
+    "Invalid Type Response": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "message": "{% 'Invalid Transaction Type: ' & $type %}",
+        "errorType": "BankingError"
+      }
+    },
+    "Calculate Withdrawal": {
+      "Type": "Pass",
+      "Assign": {
+        "currentBalance": "{% $number($states.input.Item.balance.N) %}",
+        "newBalance": "{% $number($states.input.Item.balance.N) - $amount %}"
+      },
+      "Next": "Sufficient Funds?"
+    },
+    "Sufficient Funds?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Condition": "{% $currentBalance >= $amount %}",
+          "Next": "Write Withdrawal"
+        }
+      ],
+      "Default": "Insufficient Funds"
+    },
+    "Write Withdrawal": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:updateItem",
+      "Arguments": {
+        "TableName": "hw8-account-list",
+        "Key": {
+          "account": {
+            "S": "{% $account %}"
+          }
+        },
+        "UpdateExpression": "SET balance = :b, #d = :desc",
+        "ExpressionAttributeNames": {
+          "#d": "desc"
+        },
+        "ExpressionAttributeValues": {
+          ":b": {
+            "N": "{% $string($newBalance) %}"
+          },
+          ":desc": {
+            "S": "{% $desc %}"
+          }
+        }
+      },
+      "Next": "Withdrawal Success Response"
+    },
+    "Withdrawal Success Response": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "message": "{% $string($amount) & ' withdrawn from account ' & $account %}"
+      }
+    },
+    "Insufficient Funds": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "message": "{% 'Insufficient Funds. Available balance is only ' & $string($currentBalance) & '. Cannot withdraw ' & $string($amount) %}",
+        "errorType": "BankingError"
+      }
+    }
+  },
+  "QueryLanguage": "JSONata"
+}
