@@ -13,3 +13,7 @@ __pycache__/
 
 # Editor settings
 .vscode/
+
+.terraform/
+*.tfstate
+*.tfstate.backup
