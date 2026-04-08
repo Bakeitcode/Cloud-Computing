@@ -14,6 +14,10 @@ __pycache__/
 # Editor settings
 .vscode/
 
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.backup
+
+# Sam
+.aws-sam
