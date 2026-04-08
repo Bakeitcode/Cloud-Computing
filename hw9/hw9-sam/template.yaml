@@ -26,6 +26,31 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+  HW9DynamoDB:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: hw9-table
+      PrimaryKey:
+        Name: name
+        Type: String
+  HW9LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dynamo-writer/
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      Role: arn:aws:iam::338893091918:role/LabRole
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref HW9DynamoDB
+      Events:
+        WriteToDynamo:
+          Type: Api
+          Properties:
+            Path: /write
+            Method: post
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -37,3 +62,6 @@ Outputs:
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
+  WriteToDynamApi:
+    Description: "API Gateway endpoint URL for Prod stage for write function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/write/"
