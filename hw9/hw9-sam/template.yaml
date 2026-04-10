@@ -51,6 +51,29 @@ Resources:
           Properties:
             Path: /write
             Method: post
+  HW9WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-website-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  HW9WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref HW9WebsiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub "${HW9WebsiteBucket.Arn}/*"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -65,3 +88,9 @@ Outputs:
   WriteToDynamApi:
     Description: "API Gateway endpoint URL for Prod stage for write function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/write/"
+  WebsiteURL:
+    Description: "URL for website hosted on S3"
+    Value: !GetAtt HW9WebsiteBucket.WebsiteURL
+  WebsiteBucketName:
+    Description: "Bucket name for website content"
+    Value: !Ref HW9WebsiteBucket
