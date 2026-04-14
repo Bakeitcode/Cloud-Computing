@@ -1,0 +1,18 @@
+info:
+  name: write
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: https://67mmrh9eo7.execute-api.us-east-1.amazonaws.com/Prod/write/
+  body:
+    type: json
+    data: '{ "name": "Alice", "age": 28, "profession": "Data Scientist" }'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
