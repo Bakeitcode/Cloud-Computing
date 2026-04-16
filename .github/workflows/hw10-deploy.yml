@@ -1,0 +1,60 @@
+name: Deploy HW10 Lambdas
+
+on:
+  push:
+    branches:
+      - feature-hw10
+    paths:
+      - hw10/Final-Project/**
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy_hw10_lambdas:
+    name: Deploy HW10 Lambdas
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Zip Lambda functions
+        run: |
+          cd hw10/Final-Project
+          zip create-user.zip create-user.py
+          zip get-all-users.zip get-all-users.py
+          zip create-auction.zip create-auction.py
+          zip get-auctions.zip get-auctions.py
+
+      - name: Deploy create-user
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-create-user \
+            --zip-file fileb://hw10/Final-Project/create-user.zip
+
+      - name: Deploy get-all-users
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-all-users \
+            --zip-file fileb://hw10/Final-Project/get-all-users.zip
+
+      - name: Deploy create-auction
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-create-auction \
+            --zip-file fileb://hw10/Final-Project/create-auction.zip
+
+      - name: Deploy get-auctions
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-auctions \
+            --zip-file fileb://hw10/Final-Project/get-auctions.zip
