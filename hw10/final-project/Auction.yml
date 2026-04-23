@@ -1,0 +1,23 @@
+info:
+  name: Auction
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: https://f04dacpank.execute-api.us-east-1.amazonaws.com/prod/auction
+  body:
+    type: json
+    data: |-
+      {
+        "itemName": "Tablet",
+        "description": "Reserve test",
+        "reserve": 500
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
