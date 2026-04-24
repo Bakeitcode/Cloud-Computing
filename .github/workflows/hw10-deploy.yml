@@ -28,6 +28,11 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Debug repo structure
+        run: |
+          pwd
+          ls -R
+
       - name: Zip Lambda functions
         run: |
           cd hw10/Final-Project
