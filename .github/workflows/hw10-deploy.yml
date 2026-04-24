@@ -35,7 +35,7 @@ jobs:
 
       - name: Zip Lambda functions
         run: |
-          cd hw10/Final-Project
+          cd hw10/final-project
           zip create-user.zip create-user.py
           zip get-all-users.zip get-all-users.py
           zip create-auction.zip create-auction.py
@@ -48,40 +48,40 @@ jobs:
         run: |
           aws lambda update-function-code \
             --function-name hw10-create-user \
-            --zip-file fileb://hw10/Final-Project/create-user.zip
+            --zip-file fileb://hw10/final-project/create-user.zip
 
       - name: Deploy get-all-users
         run: |
           aws lambda update-function-code \
             --function-name hw10-get-all-users \
-            --zip-file fileb://hw10/Final-Project/get-all-users.zip
+            --zip-file fileb://hw10/final-project/get-all-users.zip
 
       - name: Deploy create-auction
         run: |
           aws lambda update-function-code \
             --function-name hw10-create-auction \
-            --zip-file fileb://hw10/Final-Project/create-auction.zip
+            --zip-file fileb://hw10/final-project/create-auction.zip
 
       - name: Deploy get-auctions
         run: |
           aws lambda update-function-code \
             --function-name hw10-get-auctions \
-            --zip-file fileb://hw10/Final-Project/get-auctions.zip
+            --zip-file fileb://hw10/final-project/get-auctions.zip
 
       - name: Deploy get-bids
         run: |
           aws lambda update-function-code \
             --function-name hw10-get-bids \
-            --zip-file fileb://hw10/Final-Project/get-bids.zip
+            --zip-file fileb://hw10/final-project/get-bids.zip
 
       - name: Deploy close-auction
         run: |
           aws lambda update-function-code \
             --function-name hw10-close-auction \
-            --zip-file fileb://hw10/Final-Project/close-auction.zip
+            --zip-file fileb://hw10/final-project/close-auction.zip
 
       - name: Deploy simple-logger
         run: |
           aws lambda update-function-code \
             --function-name hw10-simple-logger \
-            --zip-file fileb://hw10/Final-Project/simple-logger.zip
+            --zip-file fileb://hw10/final-project/simple-logger.zip
