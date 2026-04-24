@@ -6,6 +6,7 @@ on:
       - feature-hw10
     paths:
       - hw10/Final-Project/**
+      - .github/workflows/hw10-deploy.yml
 
 env:
   AWS_REGION: us-east-1
@@ -34,6 +35,9 @@ jobs:
           zip get-all-users.zip get-all-users.py
           zip create-auction.zip create-auction.py
           zip get-auctions.zip get-auctions.py
+          zip get-bids.zip get-bids.py
+          zip close-auction.zip close-auction.py
+          zip simple-logger.zip simple-logger.py
 
       - name: Deploy create-user
         run: |
@@ -58,3 +62,21 @@ jobs:
           aws lambda update-function-code \
             --function-name hw10-get-auctions \
             --zip-file fileb://hw10/Final-Project/get-auctions.zip
+
+      - name: Deploy get-bids
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-bids \
+            --zip-file fileb://hw10/Final-Project/get-bids.zip
+
+      - name: Deploy close-auction
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-close-auction \
+            --zip-file fileb://hw10/Final-Project/close-auction.zip
+
+      - name: Deploy simple-logger
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-simple-logger \
+            --zip-file fileb://hw10/Final-Project/simple-logger.zip
