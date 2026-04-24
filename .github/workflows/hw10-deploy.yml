@@ -5,7 +5,7 @@ on:
     branches:
       - feature-hw10
     paths:
-      - hw10/Final-Project/**
+      - hw10/**
       - .github/workflows/hw10-deploy.yml
 
 env:
