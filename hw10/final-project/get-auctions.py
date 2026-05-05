@@ -2,6 +2,7 @@ import boto3
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("auctions")
+print("GHA Deploy test - HW10")
 
 
 def lambda_handler(event, context):
