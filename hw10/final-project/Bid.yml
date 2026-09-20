@@ -1,0 +1,23 @@
+info:
+  name: Bid
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://f04dacpank.execute-api.us-east-1.amazonaws.com/prod/bid
+  body:
+    type: json
+    data: |-
+      {
+        "auctionId": "d53b9ac6-1511-4772-8e45-309c5e13f8b3",
+        "userId": "30f6385a-fd4a-428a-99e7-21f573a68929",
+        "bidAmt": 300
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

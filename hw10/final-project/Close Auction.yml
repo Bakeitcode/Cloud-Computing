@@ -1,0 +1,21 @@
+info:
+  name: Close Auction
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: https://f04dacpank.execute-api.us-east-1.amazonaws.com/prod/auction
+  body:
+    type: json
+    data: |-
+      {
+        "auctionId": "d53b9ac6-1511-4772-8e45-309c5e13f8b3"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

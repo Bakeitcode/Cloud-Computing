@@ -1,0 +1,150 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Get User",
+  "States": {
+    "Get User": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:getItem",
+      "Arguments": {
+        "TableName": "users",
+        "Key": {
+          "userId": {
+            "S": "{% $states.context.Execution.Input.userId %}"
+          }
+        }
+      },
+      "Assign": {
+        "userResult": "{% $states.result %}"
+      },
+      "Next": "Get Auction"
+    },
+    "Get Auction": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:getItem",
+      "Arguments": {
+        "TableName": "auctions",
+        "Key": {
+          "auctionId": {
+            "S": "{% $states.context.Execution.Input.auctionId %}"
+          }
+        }
+      },
+      "Assign": {
+        "auctionResult": "{% $states.result %}"
+      },
+      "Next": "Get Highest Bid"
+    },
+    "Get Highest Bid": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:dynamodb:query",
+      "Arguments": {
+        "TableName": "bids",
+        "KeyConditionExpression": "auctionId = :aid",
+        "ExpressionAttributeValues": {
+          ":aid": {
+            "S": "{% $states.context.Execution.Input.auctionId %}"
+          }
+        },
+        "ScanIndexForward": false,
+        "Limit": 1
+      },
+      "Assign": {
+        "highestBidResult": "{% $states.result %}"
+      },
+      "Next": "Validate Bid"
+    },
+    "Validate Bid": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "User Not Found",
+          "Condition": "{% $not($exists($userResult.Item)) %}"
+        },
+        {
+          "Condition": "{% $not($exists($auctionResult.Item)) %}",
+          "Next": "Auction Not Found"
+        },
+        {
+          "Condition": "{% $auctionResult.Item.auctionStatus.S != \"OPEN\" %}",
+          "Next": "Auction Closed"
+        },
+        {
+          "Condition": "{% $number($userResult.Item.acctBalance.N) < $number($states.context.Execution.Input.bidAmt) %}",
+          "Next": "Insufficient Funds"
+        }
+      ],
+      "Default": "Store Valid Bid"
+    },
+    "Auction Closed": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "accepted": false,
+        "reason": "Auction is closed"
+      }
+    },
+    "User Not Found": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "accepted": false,
+        "reason": "User does not exist"
+      }
+    },
+    "Auction Not Found": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "accepted": false,
+        "reason": "Auction does not exist"
+      }
+    },
+    "Insufficient Funds": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "accepted": false,
+        "reason": "Insufficient funds"
+      }
+    },
+    "Store Valid Bid": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Next": "New Highest Bidder",
+      "Arguments": {
+        "TableName": "bids",
+        "Item": {
+          "auctionId": {
+            "S": "{% $states.context.Execution.Input.auctionId %}"
+          },
+          "bidAmt": {
+            "N": "{% $string($states.context.Execution.Input.bidAmt) %}"
+          },
+          "userId": {
+            "S": "{% $states.context.Execution.Input.userId %}"
+          },
+          "date": {
+            "S": "{% $states.context.Execution.StartTime %}"
+          }
+        }
+      }
+    },
+    "New Highest Bidder": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Arguments": {
+        "TopicArn": "arn:aws:sns:us-east-1:338893091918:highest-bidder-sns-topic",
+        "Message": "{% 'New highest bidder: user ' & $states.context.Execution.Input.userId & ' bid ' & $string($states.context.Execution.Input.bidAmt) %}"
+      },
+      "Next": "Accepted Bid"
+    },
+    "Accepted Bid": {
+      "Type": "Pass",
+      "End": true,
+      "Output": {
+        "accepted": true
+      }
+    }
+  },
+  "QueryLanguage": "JSONata"
+}

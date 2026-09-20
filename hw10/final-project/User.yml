@@ -1,0 +1,22 @@
+info:
+  name: User
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: https://f04dacpank.execute-api.us-east-1.amazonaws.com/prod/user
+  body:
+    type: json
+    data: |-
+      {
+        "name": "FundedUser",
+        "acctBalance": 1000
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

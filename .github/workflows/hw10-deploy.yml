@@ -1,0 +1,87 @@
+name: Deploy HW10 Lambdas
+
+on:
+  push:
+    branches:
+      - feature-hw10
+    paths:
+      - hw10/**
+      - .github/workflows/hw10-deploy.yml
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy_hw10_lambdas:
+    name: Deploy HW10 Lambdas
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Debug repo structure
+        run: |
+          pwd
+          ls -R
+
+      - name: Zip Lambda functions
+        run: |
+          cd hw10/final-project
+          zip create-user.zip create-user.py
+          zip get-all-users.zip get-all-users.py
+          zip create-auction.zip create-auction.py
+          zip get-auctions.zip get-auctions.py
+          zip get-bids.zip get-bids.py
+          zip close-auction.zip close-auction.py
+          zip simple-logger.zip simple-logger.py
+
+      - name: Deploy create-user
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-create-user \
+            --zip-file fileb://hw10/final-project/create-user.zip
+
+      - name: Deploy get-all-users
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-all-users \
+            --zip-file fileb://hw10/final-project/get-all-users.zip
+
+      - name: Deploy create-auction
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-create-auction \
+            --zip-file fileb://hw10/final-project/create-auction.zip
+
+      - name: Deploy get-auctions
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-auctions \
+            --zip-file fileb://hw10/final-project/get-auctions.zip
+
+      - name: Deploy get-bids
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-get-bids \
+            --zip-file fileb://hw10/final-project/get-bids.zip
+
+      - name: Deploy close-auction
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-close-auction \
+            --zip-file fileb://hw10/final-project/close-auction.zip
+
+      - name: Deploy simple-logger
+        run: |
+          aws lambda update-function-code \
+            --function-name hw10-simple-logger \
+            --zip-file fileb://hw10/final-project/simple-logger.zip
